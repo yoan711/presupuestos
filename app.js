@@ -556,11 +556,22 @@ $('btn-volver').addEventListener('click', () => history.back());
 
 $('btn-mas').addEventListener('click', async () => {
   const accion = await preguntar('¿Qué quieres hacer con este presupuesto?', [
+    { texto: '📝 Descargar en Word (para cambiarlo a mano)', clase: 'btn-verde', valor: 'word' },
     { texto: '📄 Hacer una copia (para otro cliente parecido)', clase: 'btn-azul', valor: 'copiar' },
     { texto: '🗑️ Borrar este presupuesto', clase: 'btn-rojo', valor: 'borrar' },
     { texto: 'Cancelar', clase: 'btn-gris', valor: null },
   ]);
-  if (accion === 'copiar') {
+  if (accion === 'word') {
+    if (!(await comprobarAntesDePDF())) return;
+    guardarAhora();
+    try {
+      await descargarWord(actual);
+      avisar('✓ Documento Word descargado en «Descargas». Ábrelo para cambiarlo e imprimirlo.', 6000);
+    } catch (err) {
+      console.error(err);
+      preguntar('Ha habido un problema al crear el documento Word.\n(' + err.message + ')', [{ texto: 'Entendido', clase: 'btn-azul' }]);
+    }
+  } else if (accion === 'copiar') {
     guardarAhora();
     const copia = JSON.parse(JSON.stringify(actual));
     copia.id = nuevoId();
