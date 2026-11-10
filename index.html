@@ -83,7 +83,12 @@
 
       <div class="tarjeta">
         <h2><span class="paso">3</span> Trabajos a realizar</h2>
-        <div id="partidas"></div>
+        <div class="partidas-zona">
+          <div class="partidas-cabecera" aria-hidden="true">
+            <span>Nº</span><span>Trabajo</span><span>Cantidad</span><span>Medida</span><span>Precio (€)</span><span class="der">Importe</span><span></span>
+          </div>
+          <div id="partidas"></div>
+        </div>
         <div class="fila-botones">
           <button class="btn btn-azul btn-grande" id="btn-anadir">➕ Añadir otro trabajo</button>
           <button class="btn btn-gris btn-grande" id="btn-habituales">📋 Elegir de la lista de trabajos</button>
