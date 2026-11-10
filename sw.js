@@ -1,6 +1,6 @@
 // Permite que la aplicación funcione sin conexión a internet.
 // Si cambias algún archivo, sube el número de versión para que se actualice.
-const VERSION = 'presupuestos-v6';
+const VERSION = 'presupuestos-v7';
 const ARCHIVOS = [
   './',
   './index.html',
