@@ -7,13 +7,13 @@
 const CLAVE_DATOS = 'presupuestos-datos-v1';
 
 const UNIDADES = [
-  { v: 'm²', t: 'm² (metros cuadrados)' },
-  { v: 'ml', t: 'm (metros lineales)' },
-  { v: 'm³', t: 'm³ (metros cúbicos)' },
+  { v: 'm²', t: 'm² (cuadrados)' },
+  { v: 'ml', t: 'm (lineales)' },
+  { v: 'm³', t: 'm³ (cúbicos)' },
   { v: 'ud', t: 'unidades' },
   { v: 'h', t: 'horas' },
   { v: 'kg', t: 'kilos' },
-  { v: 'P.A.', t: 'precio cerrado (partida)' },
+  { v: 'P.A.', t: 'precio cerrado' },
 ];
 
 const $ = (id) => document.getElementById(id);
@@ -278,25 +278,21 @@ function pintarPartidas() {
     const div = document.createElement('div');
     div.className = 'partida';
     div.innerHTML = `
-      <div class="partida-cabecera">
-        <strong>Trabajo ${i + 1}</strong>
-        <button class="btn btn-rojo" data-accion="quitar">🗑️ Quitar</button>
-      </div>
-      <label>¿Qué trabajo es?
-        <textarea rows="2" data-campo="desc" placeholder="Ej.: Alicatado de paredes del baño"></textarea>
+      <span class="partida-num">${i + 1}</span>
+      <label class="c-desc"><span class="etq">¿Qué trabajo es?</span>
+        <textarea rows="1" data-campo="desc" placeholder="Ej.: Alicatado de paredes del baño"></textarea>
       </label>
-      <div class="partida-numeros">
-        <label>Cantidad
-          <input type="text" inputmode="decimal" data-campo="cant" placeholder="Ej.: 25">
-        </label>
-        <label>Medida
-          <select data-campo="unidad">${UNIDADES.map((u) => `<option value="${u.v}">${u.t}</option>`).join('')}</select>
-        </label>
-        <label>Precio por unidad (€)
-          <input type="text" inputmode="decimal" data-campo="precio" placeholder="Ej.: 18,50">
-        </label>
-      </div>
-      <div class="partida-importe">Importe: <strong data-importe></strong></div>`;
+      <label class="c-cant"><span class="etq">Cantidad</span>
+        <input type="text" inputmode="decimal" data-campo="cant" placeholder="25">
+      </label>
+      <label class="c-ud"><span class="etq">Medida</span>
+        <select data-campo="unidad">${UNIDADES.map((u) => `<option value="${u.v}">${u.t}</option>`).join('')}</select>
+      </label>
+      <label class="c-precio"><span class="etq">Precio (€)</span>
+        <input type="text" inputmode="decimal" data-campo="precio" placeholder="18,50">
+      </label>
+      <div class="c-imp"><span class="etq">Importe</span><strong data-importe></strong></div>
+      <button class="btn-quitar" data-accion="quitar" title="Quitar este trabajo" aria-label="Quitar este trabajo">🗑️</button>`;
 
     const ta = div.querySelector('[data-campo="desc"]');
     ta.value = partida.desc;
@@ -344,7 +340,7 @@ function pintarPartidas() {
 
 function ajustarAltura(ta) {
   ta.style.height = 'auto';
-  ta.style.height = Math.max(ta.scrollHeight + 4, 70) + 'px';
+  ta.style.height = Math.max(ta.scrollHeight + 4, 44) + 'px';
 }
 
 function anadirPartida(datosPartida) {
@@ -448,7 +444,7 @@ function elegirTrabajo() {
         b.className = 'btn btn-gris opcion-trabajo';
         b.textContent = x.desc.trim().split('\n')[0];
         const detalle = document.createElement('small');
-        detalle.textContent = x.precio ? `Último precio usado: ${x.precio} € / ${x.unidad}` : `Medida: ${x.unidad} · sin precio`;
+        detalle.textContent = x.precio ? `${x.precio} € / ${x.unidad}` : x.unidad;
         b.appendChild(detalle);
         b.addEventListener('click', () => cerrar(x));
         lista.appendChild(b);
