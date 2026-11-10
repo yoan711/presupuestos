@@ -129,19 +129,57 @@ input:focus, select:focus, textarea:focus { outline: none; border-color: var(--a
 .copias p { color: var(--suave); }
 
 /* ---------- Partidas (trabajos) ---------- */
+/* Pantalla estrecha: cada trabajo apilado */
+.partidas-zona { container-type: inline-size; margin-bottom: 12px; }
+.partidas-cabecera { display: none; }
 .partida {
-  border: 2px solid var(--borde);
-  border-radius: var(--radio);
-  padding: 16px;
-  margin-bottom: 16px;
+  position: relative;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 0 10px;
+  border: 1px solid var(--borde);
+  border-radius: 10px;
+  padding: 10px 12px;
+  margin-bottom: 8px;
   background: #fbfaf7;
 }
-.partida-cabecera { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-.partida-cabecera strong { color: var(--azul); }
-.partida-cabecera .btn { min-height: 44px; padding: 6px 14px; font-size: .9rem; }
-.partida-numeros { display: grid; grid-template-columns: 1fr 1.2fr 1.2fr; gap: 0 12px; }
-.partida-importe { text-align: right; font-size: 1.15rem; }
-.partida-importe strong { font-size: 1.3rem; }
+.partida label { margin-bottom: 8px; font-size: .9rem; }
+.partida input, .partida select, .partida textarea { margin-top: 3px; }
+.partida textarea { min-height: 44px; resize: none; overflow: hidden; }
+.partida-num { grid-column: 1 / -1; font-weight: 700; color: var(--azul); margin-bottom: 4px; }
+.partida-num::before { content: "Trabajo "; }
+.c-desc { grid-column: 1 / -1; }
+.c-imp { align-self: center; text-align: right; font-size: 1rem; padding-top: 14px; }
+.c-imp .etq::after { content: ": "; }
+.c-imp strong { font-size: 1.1rem; }
+.btn-quitar {
+  position: absolute; top: 6px; right: 8px;
+  width: 40px; height: 40px; border-radius: 10px;
+  border: 1px solid transparent; background: transparent;
+  font-size: 1.1rem; cursor: pointer;
+}
+.btn-quitar:hover { background: #fbe9e7; border-color: var(--rojo); }
+.btn-quitar:focus-visible { outline: 4px solid #f2b705; }
+
+/* Pantalla ancha: cada trabajo en UNA fila, como una tabla */
+@container (min-width: 640px) {
+  .partidas-cabecera, .partida {
+    display: grid;
+    grid-template-columns: 26px minmax(0, 1fr) 76px 140px 92px 100px 40px;
+    gap: 8px; align-items: center;
+  }
+  .partidas-cabecera { font-size: .8rem; font-weight: 700; color: var(--suave); padding: 0 12px 4px; }
+  .partidas-cabecera .der { text-align: right; }
+  .partida { padding: 6px 12px; margin-bottom: 6px; }
+  .partida .etq { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .partida label { margin: 0; }
+  .partida input, .partida select, .partida textarea { margin-top: 0; padding: 8px 10px; }
+  .partida select { padding: 8px 4px; font-size: .9rem; }
+  .partida-num { grid-column: auto; margin: 0; text-align: center; }
+  .partida-num::before { content: none; }
+  .c-desc, .c-imp { grid-column: auto; }
+  .c-imp { font-size: 1rem; padding-top: 0; }
+  .c-imp strong { font-size: 1rem; }
+  .btn-quitar { position: static; }
+}
 
 .partida.resaltada { border-color: var(--azul); box-shadow: 0 0 0 4px rgba(31,95,139,.25); transition: box-shadow .3s; }
 
@@ -216,8 +254,13 @@ input:focus, select:focus, textarea:focus { outline: none; border-color: var(--a
 }
 .dialogo-x:hover { background: var(--gris-osc); }
 .dialogo-x:focus-visible { outline: 4px solid #f2b705; outline-offset: 2px; }
-.opcion-trabajo { text-align: left; font-weight: 500; }
-.opcion-trabajo small { display: block; }
+.opcion-trabajo {
+  display: flex; justify-content: space-between; align-items: baseline; gap: 12px;
+  text-align: left; font-weight: 500; font-size: .95rem;
+  min-height: 0; padding: 9px 14px; border-width: 1px; border-radius: 10px;
+}
+.opcion-trabajo small { flex: none; }
+#dialogo-botones .dialogo-botones { gap: 5px; }
 .dialogo-buscar { margin: 0 0 10px; }
 .casilla { display: flex; align-items: center; gap: 12px; cursor: pointer; }
 .casilla input { width: 26px; height: 26px; min-height: 0; margin: 0; flex: none; accent-color: var(--azul); }
