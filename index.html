@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Presupuestos</title>
+  <meta name="theme-color" content="#1f5f8b">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon-192.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- ============ PANTALLA DE INICIO ============ -->
+  <section id="pantalla-inicio" class="pantalla">
+    <header class="cabecera">
+      <h1>Mis presupuestos</h1>
+      <button class="btn btn-gris" id="btn-empresa">⚙️ Datos de mi empresa</button>
+    </header>
+
+    <main class="contenido">
+      <button class="btn btn-verde btn-enorme" id="btn-nuevo">➕ Hacer un presupuesto nuevo</button>
+
+      <div class="buscador">
+        <input type="search" id="buscar" placeholder="🔍 Buscar por cliente, número u obra…">
+      </div>
+
+      <div id="lista"></div>
+
+      <details class="copias">
+        <summary>💾 Copia de seguridad</summary>
+        <p>Los presupuestos se guardan en este ordenador. De vez en cuando conviene guardar una copia (por ejemplo, en un pendrive o en Google Drive).</p>
+        <div class="fila-botones">
+          <button class="btn btn-azul" id="btn-exportar">Guardar copia</button>
+          <button class="btn btn-gris" id="btn-importar">Recuperar copia</button>
+          <input type="file" id="archivo-importar" accept=".json,application/json" hidden>
+        </div>
+      </details>
+    </main>
+  </section>
+
+  <!-- ============ PANTALLA DEL EDITOR ============ -->
+  <section id="pantalla-editor" class="pantalla" hidden>
+    <header class="cabecera">
+      <button class="btn btn-gris" id="btn-volver">⬅ Volver</button>
+      <h1 id="titulo-editor">Presupuesto</h1>
+      <span class="guardado" id="estado-guardado">✓ Guardado</span>
+    </header>
+
+    <main class="contenido contenido-editor">
+      <aside class="resumen" id="resumen">
+        <h3>Resumen</h3>
+        <div class="resumen-cliente" id="r-cliente"></div>
+        <div class="resumen-titulo" id="r-titulo-trabajos">Trabajos</div>
+        <ol class="resumen-lista" id="r-lista"></ol>
+        <button class="btn btn-azul resumen-anadir" id="r-anadir">➕ Añadir trabajo</button>
+        <div class="resumen-totales">
+          <div><span>Suma</span><span id="r-base"></span></div>
+          <div><span id="r-iva-texto">IVA</span><span id="r-iva"></span></div>
+          <div class="resumen-total"><span>TOTAL</span><strong id="r-total"></strong></div>
+        </div>
+      </aside>
+
+      <div class="editor-formulario">
+      <div class="tarjeta">
+        <h2><span class="paso">1</span> Datos del presupuesto</h2>
+        <div class="rejilla">
+          <label>Número<input type="text" id="p-numero"></label>
+          <label>Fecha<input type="date" id="p-fecha"></label>
+        </div>
+      </div>
+
+      <div class="tarjeta">
+        <h2><span class="paso">2</span> Cliente</h2>
+        <label>Nombre del cliente<input type="text" id="c-nombre" placeholder="Ej.: Juan García López" autocomplete="off"></label>
+        <div class="rejilla">
+          <label>Teléfono<input type="tel" id="c-telefono" autocomplete="off"></label>
+          <label>DNI / NIF <small>(si lo tiene)</small><input type="text" id="c-nif" autocomplete="off"></label>
+        </div>
+        <label>Dirección del cliente<input type="text" id="c-direccion" autocomplete="off"></label>
+        <label>Dirección de la obra <small>(si es distinta)</small><input type="text" id="c-obra" autocomplete="off"></label>
+      </div>
+
+      <div class="tarjeta">
+        <h2><span class="paso">3</span> Trabajos a realizar</h2>
+        <div id="partidas"></div>
+        <div class="fila-botones">
+          <button class="btn btn-azul btn-grande" id="btn-anadir">➕ Añadir otro trabajo</button>
+          <button class="btn btn-gris btn-grande" id="btn-habituales">📋 Elegir de la lista de trabajos</button>
+        </div>
+      </div>
+
+      <div class="tarjeta">
+        <h2><span class="paso">4</span> Precio total</h2>
+        <label>IVA
+          <select id="p-iva">
+            <option value="21">21 % (normal)</option>
+            <option value="10">10 % (reforma de vivienda)</option>
+            <option value="0">Sin IVA</option>
+          </select>
+        </label>
+        <div class="totales">
+          <div><span>Suma de los trabajos</span><strong id="t-base">0,00 €</strong></div>
+          <div><span id="t-iva-texto">IVA 21 %</span><strong id="t-iva">0,00 €</strong></div>
+          <div class="total-final"><span>TOTAL</span><strong id="t-total">0,00 €</strong></div>
+        </div>
+      </div>
+
+      <div class="tarjeta">
+        <h2><span class="paso">5</span> Notas y condiciones <small>(opcional)</small></h2>
+        <textarea id="p-notas" rows="4" placeholder="Ej.: Forma de pago: 50 % al empezar y 50 % al terminar."></textarea>
+      </div>
+
+      <div class="hueco-barra"></div>
+      </div>
+    </main>
+
+    <footer class="barra-inferior">
+      <button class="btn btn-verde btn-grande" id="btn-descargar">⬇️ Descargar PDF</button>
+      <button class="btn btn-azul btn-grande" id="btn-imprimir">🖨️ Imprimir</button>
+      <button class="btn btn-gris" id="btn-mas">Más…</button>
+    </footer>
+  </section>
+
+  <!-- ============ PANTALLA DATOS DE LA EMPRESA ============ -->
+  <section id="pantalla-empresa" class="pantalla" hidden>
+    <header class="cabecera">
+      <button class="btn btn-gris" id="btn-volver-empresa">⬅ Volver</button>
+      <h1>Datos de mi empresa</h1>
+      <span></span>
+    </header>
+    <main class="contenido">
+      <p class="aviso" id="aviso-primera-vez" hidden>👋 ¡Bienvenidos! Antes de empezar, rellenad los datos de la empresa. Solo hay que hacerlo una vez: saldrán en todos los presupuestos.</p>
+      <div class="tarjeta">
+        <label>Nombre de la empresa<input type="text" id="e-nombre" placeholder="Ej.: Reformas Hernández"></label>
+        <label>Nombre del responsable <small>(opcional)</small><input type="text" id="e-responsable"></label>
+        <div class="rejilla">
+          <label>NIF / CIF<input type="text" id="e-nif"></label>
+          <label>Teléfono<input type="tel" id="e-telefono"></label>
+        </div>
+        <label>Dirección<input type="text" id="e-direccion"></label>
+        <div class="rejilla">
+          <label>Código postal y población<input type="text" id="e-poblacion"></label>
+          <label>Correo electrónico<input type="email" id="e-email"></label>
+        </div>
+        <label>Validez del presupuesto (días)<input type="number" id="e-validez" min="0" step="1"></label>
+        <label>Notas que salen siempre al final <small>(opcional)</small>
+          <textarea id="e-notas" rows="3" placeholder="Ej.: Precios válidos salvo modificaciones en la obra."></textarea>
+        </label>
+        <label class="casilla">
+          <input type="checkbox" id="e-corrector">
+          <span>Corregir faltas de ortografía automáticamente <small>(acentos, ñ, b/v, h…)</small></span>
+        </label>
+        <div class="logo-zona">
+          <div>
+            <strong>Logotipo</strong> <small>(opcional)</small>
+            <div class="fila-botones">
+              <button class="btn btn-gris" id="btn-logo">Elegir imagen</button>
+              <button class="btn btn-gris" id="btn-quitar-logo" hidden>Quitar</button>
+            </div>
+            <input type="file" id="archivo-logo" accept="image/*" hidden>
+          </div>
+          <img id="logo-vista" alt="" hidden>
+        </div>
+      </div>
+      <button class="btn btn-verde btn-enorme" id="btn-guardar-empresa">✓ Guardar datos</button>
+    </main>
+  </section>
+
+  <!-- ============ VENTANA DE MENSAJES ============ -->
+  <div id="dialogo-fondo" class="dialogo-fondo" hidden>
+    <div class="dialogo" role="dialog" aria-modal="true">
+      <div class="dialogo-cabecera">
+        <div class="dialogo-fila">
+          <p id="dialogo-texto"></p>
+          <button class="dialogo-x" id="dialogo-cerrar" aria-label="Cerrar" title="Cerrar">✕</button>
+        </div>
+        <div id="dialogo-extra"></div>
+      </div>
+      <div id="dialogo-botones" class="dialogo-botones"></div>
+    </div>
+  </div>
+
+  <div id="aviso-flotante" class="aviso-flotante" hidden></div>
+
+  <script src="lib/jspdf.umd.min.js"></script>
+  <script src="lib/jspdf.plugin.autotable.min.js"></script>
+  <script src="corrector.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
