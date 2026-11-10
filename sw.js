@@ -1,12 +1,14 @@
 // Permite que la aplicación funcione sin conexión a internet.
 // Si cambias algún archivo, sube el número de versión para que se actualice.
-const VERSION = 'presupuestos-v5';
+const VERSION = 'presupuestos-v6';
 const ARCHIVOS = [
   './',
   './index.html',
   './styles.css',
   './app.js',
   './corrector.js',
+  './word.js',
+  './lib/jszip.min.js',
   './manifest.webmanifest',
   './lib/jspdf.umd.min.js',
   './lib/jspdf.plugin.autotable.min.js',
